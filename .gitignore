@@ -1,0 +1,62 @@
+# Compiled binaries
+bin/
+obj/
+*.dll
+*.exe
+*.so
+*.dylib
+
+# IDEs
+.vs/
+.vscode/
+*.user
+*.userprefs
+*.suo
+.idea/
+*.iml
+.DS_Store
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+
+# Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+
+# Dependency packages
+packages/
+.packages/
+
+# Local configuration files
+appsettings.local.json
+*.local.json
+.env
+.env.local
+
+# Build output
+dist/
+publish/
+PublishProfiles/
+
+# Rider
+.idea/
+
+# ReSharper
+.resharper
+.resharper.user
+*.resharper
+
+# Exclude sensitive files
+INSTRUCCIONES_CONSTRUCCION.md
