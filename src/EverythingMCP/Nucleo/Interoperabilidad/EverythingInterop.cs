@@ -110,9 +110,10 @@ internal static class EverythingInterop
     [return: MarshalAs(UnmanagedType.Bool)]
     private delegate bool IndexBoolProc(int nIndex);
 
-    [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-    [return: MarshalAs(UnmanagedType.LPWStr)]
-    private delegate string IndexStringProc(int nIndex);
+    // Retorna IntPtr en lugar de string para evitar que el marshaler llame a CoTaskMemFree
+    // sobre punteros que pertenecen al buffer interno de Everything (no son CoTaskMem).
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate IntPtr IndexRawStringProc(int nIndex);
 
     [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
     private delegate uint GetFullPathNameProc(int nIndex, StringBuilder lpString, int nMaxCount);
@@ -192,10 +193,10 @@ internal static class EverythingInterop
         InvokeFunction<IndexBoolProc>("Everything_IsFolderResult")(nIndex);
 
     internal static string GetResultFileName(int nIndex) =>
-        InvokeFunction<IndexStringProc>("Everything_GetResultFileName")(nIndex);
+        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultFileName")(nIndex)) ?? "";
 
     internal static string GetResultPath(int nIndex) =>
-        InvokeFunction<IndexStringProc>("Everything_GetResultPath")(nIndex);
+        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultPath")(nIndex)) ?? "";
 
     internal static string GetResultFullPathName(int nIndex)
     {
@@ -206,7 +207,7 @@ internal static class EverythingInterop
     }
 
     internal static string GetResultExtension(int nIndex) =>
-        InvokeFunction<IndexStringProc>("Everything_GetResultExtension")(nIndex);
+        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultExtension")(nIndex)) ?? "";
 
     internal static bool GetResultSize(int nIndex, out long lpFileSize) =>
         InvokeFunction<Everything_GetResultSizeProc>("Everything_GetResultSize")(nIndex, out lpFileSize);
