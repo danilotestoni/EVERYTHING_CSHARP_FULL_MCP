@@ -145,7 +145,7 @@ internal static class EverythingInterop
     #region SDK Wrappers
 
     internal static void SetSearch(string lpSearchString) =>
-        InvokeFunction<SetSearchProc>("Everything_SetSearch")(lpSearchString);
+        InvokeFunction<SetSearchProc>("Everything_SetSearchW")(lpSearchString);
 
     internal static void SetMatchCase(bool bEnable) =>
         InvokeFunction<SetBoolProc>("Everything_SetMatchCase")(bEnable);
@@ -169,7 +169,7 @@ internal static class EverythingInterop
         InvokeFunction<SetUintProc>("Everything_SetSort")(dwSortType);
 
     internal static bool Query(bool bWait) =>
-        InvokeFunction<QueryProc>("Everything_Query")(bWait);
+        InvokeFunction<QueryProc>("Everything_QueryW")(bWait);
 
     internal static int GetNumResults() =>
         InvokeFunction<GetIntProc>("Everything_GetNumResults")();
@@ -193,21 +193,21 @@ internal static class EverythingInterop
         InvokeFunction<IndexBoolProc>("Everything_IsFolderResult")(nIndex);
 
     internal static string GetResultFileName(int nIndex) =>
-        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultFileName")(nIndex)) ?? "";
+        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultFileNameW")(nIndex)) ?? "";
 
     internal static string GetResultPath(int nIndex) =>
-        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultPath")(nIndex)) ?? "";
+        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultPathW")(nIndex)) ?? "";
 
     internal static string GetResultFullPathName(int nIndex)
     {
         // MAX_PATH = 260; para mayor robustez usamos un buffer más grande
         var sb = new StringBuilder(32767);
-        InvokeFunction<GetFullPathNameProc>("Everything_GetResultFullPathName")(nIndex, sb, sb.Capacity);
+        InvokeFunction<GetFullPathNameProc>("Everything_GetResultFullPathNameW")(nIndex, sb, sb.Capacity);
         return sb.ToString();
     }
 
     internal static string GetResultExtension(int nIndex) =>
-        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultExtension")(nIndex)) ?? "";
+        Marshal.PtrToStringUni(InvokeFunction<IndexRawStringProc>("Everything_GetResultExtensionW")(nIndex)) ?? "";
 
     internal static bool GetResultSize(int nIndex, out long lpFileSize) =>
         InvokeFunction<Everything_GetResultSizeProc>("Everything_GetResultSize")(nIndex, out lpFileSize);
