@@ -42,9 +42,9 @@ public sealed class HerramientasBusquedaFiltrada : HerramientasBase
             var respuesta = await _servicioBusqueda.BuscarAsync(consultaObj);
             return SerializarRespuesta(respuesta);
         }
-        catch (EverythingNoDisponibleException ex)
+        catch (Exception ex)
         {
-            return SerializarError(ex.Message);
+            return SerializarExcepcion(ex);
         }
     }
 
@@ -70,9 +70,9 @@ public sealed class HerramientasBusquedaFiltrada : HerramientasBase
             var respuesta = await _servicioBusqueda.BuscarAsync(consultaObj);
             return SerializarRespuesta(respuesta);
         }
-        catch (EverythingNoDisponibleException ex)
+        catch (Exception ex)
         {
-            return SerializarError(ex.Message);
+            return SerializarExcepcion(ex);
         }
     }
 
@@ -111,9 +111,9 @@ public sealed class HerramientasBusquedaFiltrada : HerramientasBase
             var respuesta = await _servicioBusqueda.BuscarAsync(consultaObj);
             return SerializarRespuesta(respuesta);
         }
-        catch (EverythingNoDisponibleException ex)
+        catch (Exception ex)
         {
-            return SerializarError(ex.Message);
+            return SerializarExcepcion(ex);
         }
     }
 
@@ -150,9 +150,9 @@ public sealed class HerramientasBusquedaFiltrada : HerramientasBase
             var respuesta = await _servicioBusqueda.BuscarAsync(consultaObj);
             return SerializarRespuesta(respuesta);
         }
-        catch (EverythingNoDisponibleException ex)
+        catch (Exception ex)
         {
-            return SerializarError(ex.Message);
+            return SerializarExcepcion(ex);
         }
     }
 
@@ -193,9 +193,9 @@ public sealed class HerramientasBusquedaFiltrada : HerramientasBase
             var respuesta = await _servicioBusqueda.BuscarAsync(consultaObj);
             return SerializarRespuesta(respuesta);
         }
-        catch (EverythingNoDisponibleException ex)
+        catch (Exception ex)
         {
-            return SerializarError(ex.Message);
+            return SerializarExcepcion(ex);
         }
     }
 
@@ -236,9 +236,9 @@ public sealed class HerramientasBusquedaFiltrada : HerramientasBase
             var respuesta = await _servicioBusqueda.BuscarAsync(consultaObj);
             return SerializarRespuesta(respuesta);
         }
-        catch (EverythingNoDisponibleException ex)
+        catch (Exception ex)
         {
-            return SerializarError(ex.Message);
+            return SerializarExcepcion(ex);
         }
     }
 

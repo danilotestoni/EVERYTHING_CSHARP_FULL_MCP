@@ -29,18 +29,24 @@ internal static class EverythingInterop
 
     #region Sort Types
 
+    // Valores tomados directamente de Everything.h del SDK oficial.
+    // CUIDADO: las fechas no van en orden secuencial: creación = 11/12, modificación = 13/14, acceso = 23/24.
     public const uint SORT_NOMBRE_ASC = 1;
     public const uint SORT_NOMBRE_DESC = 2;
     public const uint SORT_RUTA_ASC = 3;
     public const uint SORT_RUTA_DESC = 4;
     public const uint SORT_TAMAÑO_ASC = 5;
     public const uint SORT_TAMAÑO_DESC = 6;
-    public const uint SORT_FECHA_MODIFICACION_ASC = 11;
-    public const uint SORT_FECHA_MODIFICACION_DESC = 12;
-    public const uint SORT_FECHA_CREACION_ASC = 13;
-    public const uint SORT_FECHA_CREACION_DESC = 14;
-    public const uint SORT_FECHA_ACCESO_ASC = 15;
-    public const uint SORT_FECHA_ACCESO_DESC = 16;
+    public const uint SORT_EXTENSION_ASC = 7;
+    public const uint SORT_EXTENSION_DESC = 8;
+    public const uint SORT_FECHA_CREACION_ASC = 11;
+    public const uint SORT_FECHA_CREACION_DESC = 12;
+    public const uint SORT_FECHA_MODIFICACION_ASC = 13;
+    public const uint SORT_FECHA_MODIFICACION_DESC = 14;
+    public const uint SORT_ATRIBUTOS_ASC = 15;
+    public const uint SORT_ATRIBUTOS_DESC = 16;
+    public const uint SORT_FECHA_ACCESO_ASC = 23;
+    public const uint SORT_FECHA_ACCESO_DESC = 24;
 
     #endregion
 
@@ -54,6 +60,8 @@ internal static class EverythingInterop
     public const int ERROR_HILO = 5;
     public const int ERROR_INDICE_INVALIDO = 6;
     public const int ERROR_LLAMADA_INVALIDA = 7;
+    public const int ERROR_PETICION_INVALIDA = 8;
+    public const int ERROR_PARAMETRO_INVALIDO = 9;
 
     #endregion
 
@@ -275,6 +283,8 @@ internal static class EverythingInterop
         ERROR_HILO => "Error en el hilo",
         ERROR_INDICE_INVALIDO => "Índice inválido",
         ERROR_LLAMADA_INVALIDA => "Llamada inválida",
+        ERROR_PETICION_INVALIDA => "Petición inválida: solicite los datos antes de leerlos",
+        ERROR_PARAMETRO_INVALIDO => "Parámetro inválido",
         _ => $"Error desconocido (código: {codigoError})"
     };
 

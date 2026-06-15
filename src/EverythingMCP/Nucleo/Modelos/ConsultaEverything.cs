@@ -16,6 +16,8 @@ public record ConsultaEverything
     public uint Desplazamiento { get; init; } = 0;
     public uint TipoOrdenacion { get; init; } = EverythingInterop.SORT_NOMBRE_ASC;
     public uint FlagsMetadatos { get; init; } =
+        EverythingInterop.EVERYTHING_REQUEST_NOMBRE_ARCHIVO |
+        EverythingInterop.EVERYTHING_REQUEST_RUTA |
         EverythingInterop.EVERYTHING_REQUEST_RUTA_COMPLETA |
         EverythingInterop.EVERYTHING_REQUEST_EXTENSION |
         EverythingInterop.EVERYTHING_REQUEST_TAMAÑO |

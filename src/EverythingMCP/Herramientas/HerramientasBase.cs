@@ -1,4 +1,5 @@
 using System.Text.Json;
+using EverythingMCP.Nucleo.Excepciones;
 using EverythingMCP.Nucleo.Modelos;
 
 namespace EverythingMCP.Herramientas;
@@ -21,6 +22,17 @@ public abstract class HerramientasBase
 
     protected static string SerializarError(string mensaje) =>
         JsonSerializer.Serialize(new { error = mensaje }, OpcionesJson);
+
+    /// <summary>
+    /// Convierte cualquier excepción en un JSON de error con el tipo y mensaje.
+    /// Las excepciones específicas se traducen a mensajes más amigables.
+    /// </summary>
+    protected static string SerializarExcepcion(Exception ex) => ex switch
+    {
+        EverythingNoDisponibleException => SerializarError(ex.Message),
+        ArgumentException => SerializarError($"Parámetro inválido: {ex.Message}"),
+        _ => SerializarError($"{ex.GetType().Name}: {ex.Message}")
+    };
 
     protected static string NormalizarTamaño(string tamaño)
     {

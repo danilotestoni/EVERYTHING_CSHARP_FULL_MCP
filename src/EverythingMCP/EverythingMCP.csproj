@@ -17,4 +17,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="EverythingMCP.Tests" />
+  </ItemGroup>
+
 </Project>
