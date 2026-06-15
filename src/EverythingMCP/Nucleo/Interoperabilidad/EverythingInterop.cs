@@ -79,13 +79,53 @@ internal static class EverythingInterop
 
     #region Cached Module Handle
 
-    // El handle se carga una sola vez al inicializar la clase estática.
-    // GetProcAddress reutiliza el mismo handle en cada llamada (sin memory leak).
     private static readonly IntPtr _hModule = LoadLibrary(NombreDll);
 
     #endregion
 
-    #region Delegates para parámetros out (Func<> no admite out/ref)
+    #region Delegates para P/Invoke
+    // Marshal.GetDelegateForFunctionPointer<T> no admite tipos genéricos (Action<T>, Func<T>),
+    // aunque estén completamente construidos. Todos los delegates deben ser tipos concretos con nombre.
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+    private delegate void SetSearchProc([MarshalAs(UnmanagedType.LPWStr)] string lpSearchString);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate void SetBoolProc([MarshalAs(UnmanagedType.Bool)] bool bEnable);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate void SetUintProc(uint dwValue);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private delegate bool QueryProc([MarshalAs(UnmanagedType.Bool)] bool bWait);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate int GetIntProc();
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate uint GetUintProc();
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private delegate bool IndexBoolProc(int nIndex);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    private delegate string IndexStringProc(int nIndex);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+    private delegate uint GetFullPathNameProc(int nIndex, StringBuilder lpString, int nMaxCount);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate uint IndexUintProc(int nIndex);
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private delegate bool NoArgBoolProc();
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate void NoArgVoidProc();
 
     [UnmanagedFunctionPointer(CallingConvention.Winapi)]
     private delegate bool Everything_GetResultSizeProc(int nIndex, out long lpFileSize);
@@ -104,69 +144,69 @@ internal static class EverythingInterop
     #region SDK Wrappers
 
     internal static void SetSearch(string lpSearchString) =>
-        InvokeFunction<Action<string>>("Everything_SetSearch")(lpSearchString);
+        InvokeFunction<SetSearchProc>("Everything_SetSearch")(lpSearchString);
 
     internal static void SetMatchCase(bool bEnable) =>
-        InvokeFunction<Action<bool>>("Everything_SetMatchCase")(bEnable);
+        InvokeFunction<SetBoolProc>("Everything_SetMatchCase")(bEnable);
 
     internal static void SetMatchWholeWord(bool bEnable) =>
-        InvokeFunction<Action<bool>>("Everything_SetMatchWholeWord")(bEnable);
+        InvokeFunction<SetBoolProc>("Everything_SetMatchWholeWord")(bEnable);
 
     internal static void SetRegex(bool bEnable) =>
-        InvokeFunction<Action<bool>>("Everything_SetRegex")(bEnable);
+        InvokeFunction<SetBoolProc>("Everything_SetRegex")(bEnable);
 
     internal static void SetMax(uint dwMax) =>
-        InvokeFunction<Action<uint>>("Everything_SetMax")(dwMax);
+        InvokeFunction<SetUintProc>("Everything_SetMax")(dwMax);
 
     internal static void SetOffset(uint dwOffset) =>
-        InvokeFunction<Action<uint>>("Everything_SetOffset")(dwOffset);
+        InvokeFunction<SetUintProc>("Everything_SetOffset")(dwOffset);
 
     internal static void SetRequestFlags(uint dwRequestFlags) =>
-        InvokeFunction<Action<uint>>("Everything_SetRequestFlags")(dwRequestFlags);
+        InvokeFunction<SetUintProc>("Everything_SetRequestFlags")(dwRequestFlags);
 
     internal static void SetSort(uint dwSortType) =>
-        InvokeFunction<Action<uint>>("Everything_SetSort")(dwSortType);
+        InvokeFunction<SetUintProc>("Everything_SetSort")(dwSortType);
 
     internal static bool Query(bool bWait) =>
-        InvokeFunction<Func<bool, bool>>("Everything_Query")(bWait);
+        InvokeFunction<QueryProc>("Everything_Query")(bWait);
 
     internal static int GetNumResults() =>
-        InvokeFunction<Func<int>>("Everything_GetNumResults")();
+        InvokeFunction<GetIntProc>("Everything_GetNumResults")();
 
     internal static int GetNumFileResults() =>
-        InvokeFunction<Func<int>>("Everything_GetNumFileResults")();
+        InvokeFunction<GetIntProc>("Everything_GetNumFileResults")();
 
     internal static int GetNumFolderResults() =>
-        InvokeFunction<Func<int>>("Everything_GetNumFolderResults")();
+        InvokeFunction<GetIntProc>("Everything_GetNumFolderResults")();
 
     internal static uint GetTotFileResults() =>
-        InvokeFunction<Func<uint>>("Everything_GetTotFileResults")();
+        InvokeFunction<GetUintProc>("Everything_GetTotFileResults")();
 
     internal static uint GetTotFolderResults() =>
-        InvokeFunction<Func<uint>>("Everything_GetTotFolderResults")();
+        InvokeFunction<GetUintProc>("Everything_GetTotFolderResults")();
 
     internal static bool IsFileResult(int nIndex) =>
-        InvokeFunction<Func<int, bool>>("Everything_IsFileResult")(nIndex);
+        InvokeFunction<IndexBoolProc>("Everything_IsFileResult")(nIndex);
 
     internal static bool IsFolderResult(int nIndex) =>
-        InvokeFunction<Func<int, bool>>("Everything_IsFolderResult")(nIndex);
+        InvokeFunction<IndexBoolProc>("Everything_IsFolderResult")(nIndex);
 
     internal static string GetResultFileName(int nIndex) =>
-        InvokeFunction<Func<int, string>>("Everything_GetResultFileName")(nIndex);
+        InvokeFunction<IndexStringProc>("Everything_GetResultFileName")(nIndex);
 
     internal static string GetResultPath(int nIndex) =>
-        InvokeFunction<Func<int, string>>("Everything_GetResultPath")(nIndex);
+        InvokeFunction<IndexStringProc>("Everything_GetResultPath")(nIndex);
 
     internal static string GetResultFullPathName(int nIndex)
     {
         // MAX_PATH = 260; para mayor robustez usamos un buffer más grande
         var sb = new StringBuilder(32767);
-        InvokeFunction<Func<int, StringBuilder, int, uint>>("Everything_GetResultFullPathName")(nIndex, sb, sb.Capacity);
+        InvokeFunction<GetFullPathNameProc>("Everything_GetResultFullPathName")(nIndex, sb, sb.Capacity);
         return sb.ToString();
     }
 
     internal static string GetResultExtension(int nIndex) =>
-        InvokeFunction<Func<int, string>>("Everything_GetResultExtension")(nIndex);
+        InvokeFunction<IndexStringProc>("Everything_GetResultExtension")(nIndex);
 
     internal static bool GetResultSize(int nIndex, out long lpFileSize) =>
         InvokeFunction<Everything_GetResultSizeProc>("Everything_GetResultSize")(nIndex, out lpFileSize);
@@ -181,28 +221,28 @@ internal static class EverythingInterop
         InvokeFunction<Everything_GetResultDateAccessedProc>("Everything_GetResultDateAccessed")(nIndex, out lpDateAccessed);
 
     internal static uint GetResultAttributes(int nIndex) =>
-        InvokeFunction<Func<int, uint>>("Everything_GetResultAttributes")(nIndex);
+        InvokeFunction<IndexUintProc>("Everything_GetResultAttributes")(nIndex);
 
     internal static int GetLastError() =>
-        InvokeFunction<Func<int>>("Everything_GetLastError")();
+        InvokeFunction<GetIntProc>("Everything_GetLastError")();
 
     internal static void CleanUp() =>
-        InvokeFunction<Action>("Everything_CleanUp")();
+        InvokeFunction<NoArgVoidProc>("Everything_CleanUp")();
 
     internal static bool IsDBLoaded() =>
-        InvokeFunction<Func<bool>>("Everything_IsDBLoaded")();
+        InvokeFunction<NoArgBoolProc>("Everything_IsDBLoaded")();
 
     internal static uint GetMajorVersion() =>
-        InvokeFunction<Func<uint>>("Everything_GetMajorVersion")();
+        InvokeFunction<GetUintProc>("Everything_GetMajorVersion")();
 
     internal static uint GetMinorVersion() =>
-        InvokeFunction<Func<uint>>("Everything_GetMinorVersion")();
+        InvokeFunction<GetUintProc>("Everything_GetMinorVersion")();
 
     internal static uint GetRevision() =>
-        InvokeFunction<Func<uint>>("Everything_GetRevision")();
+        InvokeFunction<GetUintProc>("Everything_GetRevision")();
 
     internal static uint GetBuildNumber() =>
-        InvokeFunction<Func<uint>>("Everything_GetBuildNumber")();
+        InvokeFunction<GetUintProc>("Everything_GetBuildNumber")();
 
     #endregion
 

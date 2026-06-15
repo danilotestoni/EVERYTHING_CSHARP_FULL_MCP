@@ -11,7 +11,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(opciones =>
 {
-    opciones.LogToStandardErrorThreshold = LogLevel.Warning;
+    opciones.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
 // Registro de dependencias siguiendo DIP: todo por interfaz
